@@ -98,7 +98,7 @@ jobs:
       env: 
         AZURE_CREDENTIALS: ${{ secrets.azure_creds }}
     - name: create-tfstate-resource-group
-      uses: azure/cli@v2
+      uses: azure/cli@v1
       with:
         azcliversion: 2.65
         #
