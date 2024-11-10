@@ -6,7 +6,7 @@ env:
     config_env: 'none'
 jobs:
   get-config:
-      uses: .github/workflows/read-yaml.yml@main
+      uses: ./.github/workflows/read-yaml.yml
       with:
         file_name: config-infra-prod.yml
   test-terraform-state-deployment:
