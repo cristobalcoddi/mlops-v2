@@ -19,7 +19,7 @@ jobs:
       secrets:
         creds: ${{secrets.AZURE_CREDENTIALS}}
   create-deployment:
-      uses: Azure/mlops-templates/.github/workflows/create-deployment.yml@main
+      uses: ./.github/workflows/create-deployment.yml
       needs: [get-config,create-endpoint]
       with:
         resource_group: ${{ needs.get-config.outputs.resource_group }}
