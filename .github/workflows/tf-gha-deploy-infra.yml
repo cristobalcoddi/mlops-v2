@@ -1,7 +1,12 @@
-name: tf-gha-deploy-infra.yml
+name: tf-gha-deploy-infra
  
 on: 
-  workflow_dispatch:
+  push:
+    paths:
+        - '.github/workflows/tf-gha-deploy-infra.yml'
+        - '.github/workflows/tf-gha-install-terraform.yml'
+        - 'config-infra-prod.yml'
+        - 'infrastructure/**'
 env:
     config_env: 'none'
 jobs:
