@@ -1,4 +1,4 @@
-name: tf-gha-deploy-infra.yml
+name: tf-gha-deploy-infra
 
 on: 
   push:
