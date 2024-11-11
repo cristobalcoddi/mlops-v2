@@ -1,7 +1,9 @@
 name: deploy-batch-endpoint-pipeline
 
 on: 
-  workflow_dispatch:
+  repository_dispatch:
+    types: [train_pipeline_completed]
+
 jobs:
   get-config:
       uses: Azure/mlops-templates/.github/workflows/read-yaml.yml@main
@@ -42,3 +44,14 @@ jobs:
         deployment_name: eptestdeploy
       secrets:
         creds: ${{secrets.AZURE_CREDENTIALS}}
+  notify-deploy:
+    needs: create-deployment
+    runs-on: ubuntu-latest
+    steps:
+    - name: Trigger deploy-online-endpoint-pipeline
+      run: |
+        curl -X POST \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/cristobalcoddi/mlops-v2/dispatches \
+          -d '{"event_type":"batch_pipeline_completed"}'
