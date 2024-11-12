@@ -79,7 +79,6 @@ jobs:
 
   test-terraform-state-deployment:
     needs: [get-config, delete-nested-resources]
-    runs-on: ubuntu-latest
     if: always()  # Ensure this job runs even if delete-nested-resources is skipped
     uses: ./.github/workflows/tf-gha-install-terraform.yml
     with:
@@ -106,9 +105,7 @@ jobs:
       clientSecret: ${{ secrets.ARM_CLIENT_SECRET }}
       subscriptionId: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       tenantId: ${{ secrets.ARM_TENANT_ID }}
-
   deploy-azureml-resources:
-    needs: test-terraform-state-deployment
     runs-on: ubuntu-latest
     steps:
     - id: deploy-aml-workspace
