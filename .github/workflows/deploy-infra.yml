@@ -1,4 +1,4 @@
-name: deploy-infra # Deploy
+name: deploy-infra 
 
 on: 
   push:
@@ -91,7 +91,7 @@ jobs:
   test-terraform-state-deployment:
     needs: [get-config, delete-nested-resources]
     if: always()  # Ensure this job runs even if delete-nested-resources is skipped
-    uses: ./.github/workflows/tf-gha-install-terraform.yml
+    uses: /workflow-resources/infra/tf-gha-install-terraform.yml
     with:
       TFAction: 'apply'
       dply_environment: ${{ needs.set-env-branch.outputs.config-file }} 
