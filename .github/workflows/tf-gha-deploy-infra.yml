@@ -43,7 +43,7 @@ jobs:
 
   delete-nested-resources:
     needs: check-nested-resources
-    if: env.resources_exist == 'true'
+    if: needs.check-nested-resources.outputs.resources_exist == 'true'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
