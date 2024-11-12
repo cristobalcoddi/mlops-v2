@@ -1,13 +1,7 @@
 name: tf-gha-deploy-infra
 
 on: 
-  push:
-    paths:
-      - '.github/workflows/tf-gha-deploy-infra.yml'
-      - '.github/workflows/tf-gha-install-terraform.yml'
-      - 'config-infra-prod.yml'
-      - 'infrastructure/**'
-
+  workflow_dispatch:
 env:
   config_env: 'none'
 
@@ -37,8 +31,9 @@ jobs:
     - name: Check if nested resources exist in AML
       id: check
       run: |
-        endpoints=$(az ml endpoint list --query "[].name" -o tsv)
-        if [[ -n "$endpoints" ]]; then
+        batch_endpoints=$(az ml batch-endpoint list --query "[].name" -o tsv)
+        online_endpoints=$(az ml online-endpoint list --query "[].name" -o tsv)
+        if [[ -n "$batch_endpoints" || -n "$online_endpoints" ]]; then
           echo "resources_exist=true" >> $GITHUB_ENV
         else
           echo "resources_exist=false" >> $GITHUB_ENV
@@ -62,9 +57,13 @@ jobs:
 
     - name: Delete nested resources in AML
       run: |
-        endpoints=$(az ml endpoint list --query "[].name" -o tsv)
-        for endpoint in $endpoints; do
-          az ml endpoint delete --name $endpoint --yes
+        batch_endpoints=$(az ml batch-endpoint list --query "[].name" -o tsv)
+        for endpoint in $batch_endpoints; do
+          az ml batch-endpoint delete --name $endpoint --yes
+        done
+        online_endpoints=$(az ml online-endpoint list --query "[].name" -o tsv)
+        for endpoint in $online_endpoints; do
+          az ml online-endpoint delete --name $endpoint --yes
         done
 
   test-terraform-state-deployment:
