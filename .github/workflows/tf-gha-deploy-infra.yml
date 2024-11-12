@@ -54,7 +54,7 @@ jobs:
         fi
 
   delete-nested-resources:
-    needs: check-nested-resources
+    needs: [get-config, check-nested-resources]
     if: needs.check-nested-resources.outputs.resources_exist == 'true'
     runs-on: ubuntu-latest
     steps:
