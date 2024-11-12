@@ -37,7 +37,7 @@ jobs:
         resource_group=${{ needs.get-config.outputs.resource_group }}
         workspace_name=${{ needs.get-config.outputs.aml_workspace }}
         echo "Purging soft-deleted workspace..."
-        az ml workspace delete --name $workspace_name --resource-group $resource_group --yes --purge || true
+        az ml workspace delete --name $workspace_name --resource-group $resource_group --yes --permanently-delete --verbose --no-wait || true
 
   check-nested-resources:
     needs: [get-config, purge-soft-deleted-workspace]
