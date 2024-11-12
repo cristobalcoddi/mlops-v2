@@ -1,4 +1,4 @@
-name: tf-gha-deploy-infra
+name: deploy-infra # Deploy
 
 on: 
   push:
