@@ -84,6 +84,7 @@ jobs:
         for endpoint in $online_endpoints; do
           echo "Deleting online endpoint: $endpoint"
           az ml online-endpoint delete --resource-group $resource_group --workspace-name $workspace_name --name $endpoint --yes
+        done
       env:
         AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
