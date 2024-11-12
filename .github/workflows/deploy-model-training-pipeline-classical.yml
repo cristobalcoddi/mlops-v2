@@ -1,4 +1,4 @@
-name: deploy-model-training-pipeline
+name: model-training
 
 on: 
   push:
