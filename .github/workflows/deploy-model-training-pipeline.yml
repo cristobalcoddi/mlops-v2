@@ -3,11 +3,10 @@ name: model-training
 on: 
   push:
     paths:
-      - '.github/workflows/deploy-model-training-pipeline-classical.yml'
-      - 'pipeline.yml'
+      - '.github/workflows/deploy-model-training-pipeline.yml'
       - 'data-science/src/**'
       - 'mlops/azureml/train/**'
-      - 'config-infra-prod.yml'
+      - 'data/**'
 
 jobs:
   get-config:

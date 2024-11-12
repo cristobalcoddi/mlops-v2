@@ -3,8 +3,8 @@ name: deploy-infra # Deploy
 on: 
   push:
     paths:
-      - '.github/workflows/tf-gha-deploy-infra.yml'
-      - '.github/workflows/tf-gha-install-terraform.yml'
+      - '.github/workflows/deploy-infra.yml'
+      - 'workflow-resources/infra/tf-gha-install-terraform.yml'
       - 'config-infra-prod.yml'
       - 'infrastructure/**'
 
