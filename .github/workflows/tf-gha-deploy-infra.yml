@@ -40,10 +40,10 @@ jobs:
         resource_group=${{ needs.get-config.outputs.resource_group }}
         workspace_name=${{ needs.get-config.outputs.aml_workspace }}
         echo "Checking batch endpoints..."
-        batch_endpoints=$(az ml batch-endpoint list --resource-group $resource_group --workspace-name $workspace_name --query "[].name" -o tsv)
+        batch_endpoints=$(az ml batch-endpoint list --resource-group $resource_group --workspace-name $workspace_name --query "[].name" -o tsv 2>/dev/null || echo "")
         echo "Batch endpoints: $batch_endpoints"
         echo "Checking online endpoints..."
-        online_endpoints=$(az ml online-endpoint list --resource-group $resource_group --workspace-name $workspace_name --query "[].name" -o tsv)
+        online_endpoints=$(az ml online-endpoint list --resource-group $resource_group --workspace-name $workspace_name --query "[].name" -o tsv 2>/dev/null || echo "")
         echo "Online endpoints: $online_endpoints"
         if [[ -n "$batch_endpoints" || -n "$online_endpoints" ]]; then
           echo "resources_exist=true" >> $GITHUB_ENV
