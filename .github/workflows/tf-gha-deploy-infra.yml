@@ -20,6 +20,8 @@ jobs:
   check-nested-resources:
     needs: get-config
     runs-on: ubuntu-latest
+    outputs:
+      resources_exist: ${{ steps.check.outputs.resources_exist }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -38,11 +40,11 @@ jobs:
 
     - name: Check if nested resources exist
       id: check
-      run: echo "Resources exist: ${{ steps.plan.outputs.exitcode == 2 }}"
+      run: echo "::set-output name=resources_exist::${{ steps.plan.outputs.exitcode == 2 }}"
 
   delete-nested-resources:
     needs: check-nested-resources
-    if: steps.check.outputs.exitcode == '2'
+    if: needs.check-nested-resources.outputs.resources_exist == 'true'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
