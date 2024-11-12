@@ -37,10 +37,10 @@ jobs:
         resource_group=${{ needs.get-config.outputs.resource_group }}
         workspace_name=${{ needs.get-config.outputs.aml_workspace }}
         echo "Checking for soft-deleted workspace..."
-        deleted_workspace_id=$(az ml workspace list-deleted --query "[?name=='$workspace_name' && resourceGroup=='$resource_group'].id" -o tsv)
-        if [ -n "$deleted_workspace_id" ]; then
+        workspace_status=$(az ml workspace show --name $workspace_name --resource-group $resource_group --query "properties.provisioningState" -o tsv || echo "notfound")
+        if [ "$workspace_status" == "Deleting" ]; then
           echo "Soft-deleted workspace found. Purging..."
-          az ml workspace purge --ids $deleted_workspace_id --yes --verbose
+          az ml workspace delete --name $workspace_name --resource-group $resource_group --yes --permanently-delete --verbose --no-wait
         else
           echo "No soft-deleted workspace found."
         fi
