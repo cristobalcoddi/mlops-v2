@@ -1,7 +1,9 @@
 name: deploy-online-endpoint-pipeline
 
 on: 
-  workflow_dispatch:
+  repository_dispatch:
+    types: [batch_pipeline_completed]
+
 jobs:
   get-config:
       uses: Azure/mlops-templates/.github/workflows/read-yaml.yml@main
