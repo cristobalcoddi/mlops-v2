@@ -64,7 +64,7 @@ jobs:
     needs: run-pipeline
     runs-on: ubuntu-latest
     steps:
-    - name: Trigger deploy-batch-endpoint-pipeline
+    - name: Trigger deploy-batch-endpoint-pipeline # testing
       run: |
         curl -X POST \
           -H "Accept: application/vnd.github.v3+json" \
