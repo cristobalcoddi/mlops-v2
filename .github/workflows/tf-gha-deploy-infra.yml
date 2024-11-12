@@ -27,7 +27,9 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Set up Azure CLI
-      uses: azure/setup-azure-cli@v1
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Check if nested resources exist in AML
       id: check
@@ -38,8 +40,6 @@ jobs:
         else
           echo "resources_exist=false" >> $GITHUB_ENV
         fi
-      env:
-        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
   delete-nested-resources:
     needs: check-nested-resources
@@ -50,7 +50,9 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up Azure CLI
-      uses: azure/setup-azure-cli@v1
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Delete nested resources in AML
       run: |
@@ -58,8 +60,6 @@ jobs:
         for endpoint in $endpoints; do
           az ml endpoint delete --name $endpoint --yes
         done
-      env:
-        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
   test-terraform-state-deployment:
     needs: [get-config, delete-nested-resources]
