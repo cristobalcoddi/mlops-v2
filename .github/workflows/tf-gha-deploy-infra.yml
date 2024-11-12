@@ -1,13 +1,7 @@
 name: tf-gha-deploy-infra
 
 on: 
-  push:
-    paths:
-      - '.github/workflows/tf-gha-deploy-infra.yml'
-      - '.github/workflows/tf-gha-install-terraform.yml'
-      - 'config-infra-prod.yml'
-      - 'infrastructure/**'
-
+  workflow_dispatch:
 env:
   config_env: 'none'
 
@@ -74,9 +68,13 @@ jobs:
         online_endpoints=$(az ml online-endpoint list --resource-group $resource_group --workspace-name $workspace_name --query "[].name" -o tsv)
         for endpoint in $online_endpoints; do
           az ml online-endpoint delete --resource-group $resource_group --workspace-name $workspace_name --name $endpoint --yes
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
   test-terraform-state-deployment:
     needs: [get-config, delete-nested-resources]
+    runs-on: ubuntu-latest
+    if: always()  # Ensure this job runs even if delete-nested-resources is skipped
     uses: ./.github/workflows/tf-gha-install-terraform.yml
     with:
       TFAction: 'apply'
@@ -104,6 +102,7 @@ jobs:
       tenantId: ${{ secrets.ARM_TENANT_ID }}
 
   deploy-azureml-resources:
+    needs: test-terraform-state-deployment
     runs-on: ubuntu-latest
     steps:
     - id: deploy-aml-workspace
