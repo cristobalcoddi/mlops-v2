@@ -47,8 +47,10 @@ jobs:
         echo "Online endpoints: $online_endpoints"
         if [[ -n "$batch_endpoints" || -n "$online_endpoints" ]]; then
           echo "resources_exist=true" >> $GITHUB_ENV
+          echo "::set-output name=resources_exist::true"
         else
           echo "resources_exist=false" >> $GITHUB_ENV
+          echo "::set-output name=resources_exist::false"
         fi
 
   delete-nested-resources:
