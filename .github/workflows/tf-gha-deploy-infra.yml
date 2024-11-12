@@ -37,8 +37,10 @@ jobs:
     - name: Check if nested resources exist in AML
       id: check
       run: |
-        batch_endpoints=$(az ml batch-endpoint list --query "[].name" -o tsv)
-        online_endpoints=$(az ml online-endpoint list --query "[].name" -o tsv)
+        resource_group=${{ needs.get-config.outputs.resource_group }}
+        workspace_name=${{ needs.get-config.outputs.aml_workspace }}
+        batch_endpoints=$(az ml batch-endpoint list --resource-group $resource_group --workspace-name $workspace_name --query "[].name" -o tsv)
+        online_endpoints=$(az ml online-endpoint list --resource-group $resource_group --workspace-name $workspace_name --query "[].name" -o tsv)
         if [[ -n "$batch_endpoints" || -n "$online_endpoints" ]]; then
           echo "resources_exist=true" >> $GITHUB_ENV
         else
@@ -63,14 +65,15 @@ jobs:
 
     - name: Delete nested resources in AML
       run: |
-        batch_endpoints=$(az ml batch-endpoint list --query "[].name" -o tsv)
+        resource_group=${{ needs.get-config.outputs.resource_group }}
+        workspace_name=${{ needs.get-config.outputs.aml_workspace }}
+        batch_endpoints=$(az ml batch-endpoint list --resource-group $resource_group --workspace-name $workspace_name --query "[].name" -o tsv)
         for endpoint in $batch_endpoints; do
-          az ml batch-endpoint delete --name $endpoint --yes
+          az ml batch-endpoint delete --resource-group $resource_group --workspace-name $workspace_name --name $endpoint --yes
         done
-        online_endpoints=$(az ml online-endpoint list --query "[].name" -o tsv)
+        online_endpoints=$(az ml online-endpoint list --resource-group $resource_group --workspace-name $workspace_name --query "[].name" -o tsv)
         for endpoint in $online_endpoints; do
-          az ml online-endpoint delete --name $endpoint --yes
-        done
+          az ml online-endpoint delete --resource-group $resource_group --workspace-name $workspace_name --name $endpoint --yes
 
   test-terraform-state-deployment:
     needs: [get-config, delete-nested-resources]
