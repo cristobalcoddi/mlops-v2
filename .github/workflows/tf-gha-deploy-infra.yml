@@ -37,7 +37,7 @@ jobs:
         az ml workspace delete --name $workspace_name --resource-group $resource_group --yes --no-wait --force-deletion
 
   check-nested-resources:
-    needs: get-config
+    needs: [get-config, purge-soft-deleted-workspace]
     runs-on: ubuntu-latest
     outputs:
       resources_exist: ${{ steps.check.outputs.resources_exist }}
