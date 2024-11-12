@@ -29,6 +29,9 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: Install Azure ML extension
+      run: az extension add --name ml
+
     - name: Purge soft-deleted workspace
       run: |
         resource_group=${{ needs.get-config.outputs.resource_group }}
